@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasti - e-Verify - Registry Dropbox</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Custom Tailwind Configuration
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-red': '#e74c3c',
+                        'nav-bg': '#000080', 
+                        'nav-active-bg': '#0000AA',
+                        'nav-active-border': '#0000FF',
+                        'table-header-bg-main': '#bdc3c7',
+                        'table-header-bg-sub': '#ecf0f1',
+                        'pasti-blue': '#3498db',
+                        'search-button-blue': '#3498db',
+                        'back-button-red': '#e74c3c',
+                        'pasti-dark-blue': '#293547', 
+                        'success-message-green': '#2ecc71', 
+                        'warning-orange': '#f39c12',
+                        'submit-blue': '#2C7AAB', 
+                        'cancel-red': '#D9534F', 
+                        'generate-dropbox-orange': '#f1c40f',
+                        'delete-red': '#c0392b',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Base styles */
+        body { background-color: #f0f0f0; margin: 0; font-family: 'Inter', sans-serif; }
+        .app-container { display: flex; height: 100vh; }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .logo-section { padding: 10px 20px; font-size: 24px; font-weight: bold; margin-bottom: 20px; }
+        
+        .menu-item {
+            display: block; 
+            padding: 10px 20px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            font-size: 14px;
+            transition: background-color 0.15s;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: #0000AA;
+            border-left: 3px solid #3498db;
+        }
+        
+        /* Specific style for submenu items */
+        .submenu-item {
+            padding-left: 30px; 
+            font-size: 13px;
+            background-color: #3b5066; 
+            border-left: none; 
+        }
+        
+        .submenu-item:hover { background-color: #4a647d; }
+
+        .menu-item-group {
+            font-size: 12px;
+            font-weight: bold;
+            padding: 10px 20px 5px;
+            color: #bdc3c7;
+        }
+
+        /* Table specific styles for appearance */
+        .results-table th {
+            background-color: var(--tw-bg-table-header-bg-main, #bdc3c7); 
+            color: var(--tw-text-pasti-dark-blue, #293547); 
+            font-weight: bold;
+            text-align: left;
+            padding: 8px 12px;
+            white-space: nowrap; /* Prevent headers from wrapping */
+        }
+        .results-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #ecf0f1;
+            white-space: nowrap;
+            font-size: 13px;
+        }
+        .results-table tbody tr:hover {
+            background-color: #f7f9fa;
+        }
+    </style>
+</head>
+<body class="bg-[#f0f0f0]">
+
+<div class="app-container">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-section">Pasti</div>
+        <hr style="border-color: #0000AA;">
+        <div class="menu-item">IT Service Management</div>
+        <div class="menu-item">Finance & Accounting</div>
+        <div class="menu-item">E-Filing</div>
+        <!-- E-Verify Section (Active/Open State for context) -->
+        <div class="menu-group">
+            <div class="menu-item flex justify-between items-center bg-[#0000AA] border-l-3 border-[#3498db]">
+                <span>e-Verify</span>
+                <!-- Up arrow for active menu -->
+                <svg class="w-4 h-4 transform rotate-180" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            </div>
+            <!-- Submenu Container -->
+            <div>
+                <a href="registry_dropbox.html" class="menu-item submenu-item active">Registry Dropbox</a>
+                <div class="menu-item submenu-item">Print Dropbox</div>
+                <div class="menu-item submenu-item">Receivable Report</div>
+                <div class="menu-item submenu-item">Monitoring Transaction</div>
+                <div class="menu-item submenu-item">Upload Data Payment Invoice</div>
+            </div>
+        </div>
+        <!-- End E-Verify Section -->
+        <div class="menu-item">Verification Transaction</div>
+        <div class="menu-item">Re-Print Verification</div>
+        <div class="menu-item">Tax Invoice Process</div>
+    </div>
+
+    <div class="flex-1 flex flex-col bg-white overflow-hidden">
+        
+        <!-- Top Navigation Bar -->
+        <div class="flex justify-between items-center bg-primary-red text-white p-2 text-sm shadow-md flex-shrink-0">
+            <div class="flex">
+                <a href="index.html" class="px-3 cursor-pointer hover:bg-white hover:text-gray-800 rounded-t-lg">🏠 Home</a>
+                <div class="px-3 bg-white text-gray-800 font-semibold rounded-t-lg">Registry Dropbox <span class="ml-2 cursor-pointer">x</span></div>
+            </div>
+            <div id="currentDateTime"></div>
+        </div>
+
+        <!-- Main Content Area (Step 5 & 6) -->
+        <div class="flex-1 p-8 overflow-y-auto bg-gray-50">
+            <h1 class="text-2xl font-bold mb-6 text-pasti-dark-blue border-b pb-2"></h1>
+
+            <!-- Search Form Area -->
+            <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                
+                <!-- Input Fields -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-4">
+                    
+                    <!-- Supplier ID & Registration No. -->
+                    <div class="flex items-center sm:col-span-1">
+                        <label for="supplierId" class="font-semibold text-gray-700 w-48 flex-shrink-0">Supplier ID:</label>
+                        <input type="text" id="supplierId" class="w-full border-gray-300 rounded-md p-2 text-sm border focus:ring-pasti-blue focus:border-pasti-blue" placeholder="Enter Supplier ID">
+                    </div>
+                    <div class="flex items-center sm:col-span-2 lg:col-span-1">
+                        <label for="regNo" class="font-semibold text-gray-700 w-48 flex-shrink-0">Verification/Registration No:</label>
+                        <input type="text" id="regNo" class="w-full border-gray-300 rounded-md p-2 text-sm border focus:ring-pasti-blue focus:border-pasti-blue" placeholder="Enter Registration No">
+                    </div>
+                    
+                    <!-- Supplier Description & Dropbox Code -->
+                    <div class="flex items-center sm:col-span-1">
+                        <label for="supplierDesc" class="font-semibold text-gray-700 w-48 flex-shrink-0">Supplier Description:</label>
+                        <input type="text" id="supplierDesc" value="" class="w-full border-gray-300 rounded-md p-2 text-sm border focus:ring-pasti-blue focus:border-pasti-blue" placeholder="Enter Description">
+                    </div>
+                    <div class="flex items-center sm:col-span-1">
+                        <label for="dropboxCode" class="font-semibold text-gray-700 w-48 flex-shrink-0">Dropbox Code:</label>
+                        <input type="text" id="dropboxCode" class="w-full border-gray-300 rounded-md p-2 text-sm border focus:ring-pasti-blue focus:border-pasti-blue" placeholder="Enter Dropbox Code">
+                    </div>
+
+                    <!-- Verification Date & Buttons -->
+                    <div class="flex items-center sm:col-span-1">
+                        <label for="verificationDate" class="font-semibold text-gray-700 w-48 flex-shrink-0">Verification/Registration Date:</label>
+                        <input type="date" id="verificationDate" value="2025-11-06" class="w-full border-gray-300 rounded-md p-2 text-sm border focus:ring-pasti-blue focus:border-pasti-blue">
+                    </div>
+                    
+                    <!-- Buttons -->
+                    <div class="flex justify-end space-x-4 sm:col-span-2 lg:col-span-1">
+                         <!-- Search Button -->
+                         <button id="searchButton" class="bg-search-button-blue hover:bg-pasti-blue text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            Search
+                        </button>
+                        <!-- Reset Button -->
+                        <button id="resetButton" class="bg-cancel-red hover:bg-[#C9302C] text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 0012 4.043c-3.189 0-5.908 1.545-7.656 3.907M1.5 10v5h.582m15.356 2A8.001 8.001 0 0012 19.957c3.189 0 5.908-1.545 7.656-3.907"></path></svg>
+                            Reset
+                        </button>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <!-- Invoice Results Section (Hidden initially) -->
+            <div id="resultsSection" class="max-w-6xl mx-auto mt-6 hidden">
+                
+                <!-- Result Action Buttons -->
+                <div class="flex justify-start space-x-3 mb-3">
+                    <button id="generateDropboxBtn" class="bg-generate-dropbox-orange hover:bg-[#d4ac0d] text-gray-900 font-bold py-2 px-4 rounded-lg shadow-md text-sm transition duration-150">
+                        Generate Dropbox (max 6 invoices)
+                    </button>
+                    <button class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg shadow-md text-sm transition duration-150">
+                        Save as Draft
+                    </button>
+                    <button class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg shadow-md text-sm transition duration-150">
+                        Select Dropbox
+                    </button>
+                    <div class="flex-grow"></div>
+                    <button class="bg-delete-red hover:bg-[#a62c1e] text-white font-bold py-2 px-4 rounded-lg shadow-md text-sm transition duration-150">
+                        Delete Dropbox
+                    </button>
+                    <button class="bg-pasti-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md text-sm transition duration-150">
+                        Report & Print
+                    </button>
+                </div>
+
+                <!-- Invoice Data Table -->
+                <div class="overflow-x-auto rounded-xl shadow-lg border border-gray-300">
+                    <table class="min-w-full bg-white results-table">
+                        <thead>
+                            <tr>
+                                <th class="py-3 px-3 text-center w-12">No.</th>
+                                <th class="py-3 px-3 text-center w-12"><input type="checkbox" id="selectAll"></th>
+                                <th class="py-3 px-3">Verif. No.</th>
+                                <th class="py-3 px-3">Receipt No.</th>
+                                <th class="py-3 px-3">Receipt Date</th>
+                                <th class="py-3 px-3">Currency</th>
+                                <th class="py-3 px-3 text-right">Amount (PPN/PPnBM)</th>
+                                <th class="py-3 px-3 text-right">Total Payment</th>
+                                <th class="py-3 px-3">BAST Date</th>
+                                <th class="py-3 px-3 text-right">BAST Qty</th>
+                                <th class="py-3 px-3">Tax Inv. No.</th>
+                                <th class="py-3 px-3">Supplier Name</th>
+                                <th class="py-3 px-3">NPWP Supplier</th>
+                                <th class="py-3 px-3">Address</th>
+                                <th class="py-3 px-3 text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoiceTableBody" class="text-gray-700">
+                            <!-- Data rows will be inserted here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Custom Modal for Messages (replaces alert()) - Hidden by default -->
+            <div id="customModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center p-4 z-50">
+                <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm">
+                    <h3 id="modalTitle" class="text-xl font-bold mb-4 text-pasti-dark-blue">Notification</h3>
+                    <p id="modalMessage" class="text-gray-700 mb-6"></p>
+                    <div class="flex justify-end">
+                        <button id="modalCloseButton" class="bg-pasti-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-150">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-center text-sm text-gray-400 mt-12">Registry Dropbox Module (e-Verify Section)</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Check authentication on page load
+    const simulatedLogin = localStorage.getItem('simulated_login');
+    const otpPassed = localStorage.getItem('simulated_otp_passed');
+
+    if (!simulatedLogin || otpPassed !== 'true') {
+        // Not authenticated, redirect to login
+        window.location.href = 'login.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- DOM Elements ---
+        const supplierIdInput = document.getElementById('supplierId');
+        const supplierDescInput = document.getElementById('supplierDesc');
+        const regNoInput = document.getElementById('regNo');
+        const verificationDateInput = document.getElementById('verificationDate');
+        const dropboxCodeInput = document.getElementById('dropboxCode');
+        
+        const searchButton = document.getElementById('searchButton');
+        const resetButton = document.getElementById('resetButton');
+        const generateDropboxBtn = document.getElementById('generateDropboxBtn');
+        
+        const resultsSection = document.getElementById('resultsSection');
+        const invoiceTableBody = document.getElementById('invoiceTableBody');
+        const selectAllCheckbox = document.getElementById('selectAll');
+        
+        // Modal Elements
+        const customModal = document.getElementById('customModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalCloseButton = document.getElementById('modalCloseButton');
+        
+        // --- Mock Data ---
+        // Mock data representing invoices ready for dropbox registration
+        const mockInvoiceData = [
+            { id: 1, verifNo: '12', receiptNo: 'R-1022', receiptDate: '26-OCT-2025', currency: 'IDR', amount: 3200000.00, totalPayment: 3520000.00, bastDate: '27-OCT-2025', bastQty: 10, taxInvNo: '001.000-25.12345678', supplierName: 'Part 1', npwp: '99.999.999.9-999.999', address: 'Jakarata P' },
+            { id: 2, verifNo: '13', receiptNo: 'R-1023', receiptDate: '27-OCT-2025', currency: 'IDR', amount: 450000.00, totalPayment: 495000.00, bastDate: '27-OCT-2025', bastQty: 10, taxInvNo: '001.000-25.12345679', supplierName: 'Part 2', npwp: '99.999.999.9-999.999', address: 'Bandung D' },
+            { id: 3, verifNo: '14', receiptNo: 'R-1024', receiptDate: '28-OCT-2025', currency: 'IDR', amount: 1500000.00, totalPayment: 1650000.00, bastDate: '29-OCT-2025', bastQty: 20, taxInvNo: '001.000-25.12345680', supplierName: 'Part 1', npwp: '99.999.999.9-999.999', address: 'Jakarata P' },
+            { id: 4, verifNo: '15', receiptNo: 'R-1025', receiptDate: '28-OCT-2025', currency: 'IDR', amount: 780000.00, totalPayment: 858000.00, bastDate: '29-OCT-2025', bastQty: 15, taxInvNo: '001.000-25.12345681', supplierName: 'Part 3', npwp: '99.999.999.9-999.999', address: 'Surabaya K' },
+            { id: 5, verifNo: '16', receiptNo: 'R-1026', receiptDate: '29-OCT-2025', currency: 'IDR', amount: 9000000.00, totalPayment: 9900000.00, bastDate: '30-OCT-2025', bastQty: 50, taxInvNo: '001.000-25.12345682', supplierName: 'Part 2', npwp: '99.999.999.9-999.999', address: 'Bandung D' },
+            { id: 6, verifNo: '17', receiptNo: 'R-1027', receiptDate: '29-OCT-2025', currency: 'IDR', amount: 200000.00, totalPayment: 220000.00, bastDate: '30-OCT-2025', bastQty: 5, taxInvNo: '001.000-25.12345683', supplierName: 'Part 1', npwp: '99.999.999.9-999.999', address: 'Jakarata P' },
+            { id: 7, verifNo: '18', receiptNo: 'R-1028', receiptDate: '30-OCT-2025', currency: 'IDR', amount: 600000.00, totalPayment: 660000.00, bastDate: '31-OCT-2025', bastQty: 12, taxInvNo: '001.000-25.12345684', supplierName: 'Part 3', npwp: '99.999.999.9-999.999', address: 'Surabaya K' },
+        ];
+        
+        // Use a mutable array to simulate the current state of invoices on the screen
+        let currentInvoices = [...mockInvoiceData];
+
+
+        // --- Utility Functions ---
+
+        /** Updates the current date and time in the top bar */
+        function updateDateTime() {
+            const now = new Date();
+            // Using toLocaleString for comprehensive date/time formatting
+            const options = { 
+                day: '2-digit', month: 'short', year: 'numeric', 
+                hour: '2-digit', minute: '2-digit', second: '2-digit', 
+                hour12: false 
+            };
+            const formattedDate = now.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase().replace(/,/g, '');
+            const formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+            document.getElementById('currentDateTime').textContent = `${formattedDate} ${formattedTime}`;
+        }
+        setInterval(updateDateTime, 1000); 
+        updateDateTime(); // Initial call
+
+        /** Shows a custom modal message instead of alert() */
+        function showModal(title, message, isError = false) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            // Update title color based on message type
+            modalTitle.className = `text-xl font-bold mb-4 ${isError ? 'text-primary-red' : 'text-pasti-dark-blue'}`;
+            customModal.classList.remove('hidden');
+            customModal.classList.add('flex');
+        }
+
+        modalCloseButton.onclick = () => {
+            customModal.classList.add('hidden');
+            customModal.classList.remove('flex');
+        };
+
+        /** Formats a number as currency style, similar to Indonesian Rupiah presentation (no symbol) */
+        function formatCurrency(number) {
+            return new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(number);
+        }
+
+        /** Renders the invoice table with data */
+        function renderTable(data) {
+            currentInvoices = data; // Update the current state
+            invoiceTableBody.innerHTML = ''; // Clear existing rows
+            
+            if (data.length === 0) {
+                invoiceTableBody.innerHTML = '<tr><td colspan="15" class="text-center py-6 text-gray-500">No invoices found for the specified criteria.</td></tr>';
+                // Ensure 'select all' is unchecked and disabled if no results
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.disabled = true;
+                resultsSection.classList.add('hidden');
+                return;
+            }
+
+            selectAllCheckbox.disabled = false;
+
+            data.forEach((invoice, index) => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-gray-200 hover:bg-gray-100';
+                
+                row.innerHTML = `
+                    <td class="py-3 px-3 text-center">${index + 1}</td>
+                    <td class="py-3 px-3 text-center"><input type="checkbox" data-id="${invoice.id}" class="invoice-checkbox"></td>
+                    <td class="py-3 px-3 font-medium">${invoice.verifNo}</td>
+                    <td class="py-3 px-3">${invoice.receiptNo}</td>
+                    <td class="py-3 px-3">${invoice.receiptDate}</td>
+                    <td class="py-3 px-3">${invoice.currency}</td>
+                    <td class="py-3 px-3 text-right">${formatCurrency(invoice.amount)}</td>
+                    <td class="py-3 px-3 text-right font-semibold">${formatCurrency(invoice.totalPayment)}</td>
+                    <td class="py-3 px-3">${invoice.bastDate}</td>
+                    <td class="py-3 px-3 text-right">${invoice.bastQty}</td>
+                    <td class="py-3 px-3">${invoice.taxInvNo}</td>
+                    <td class="py-3 px-3">${invoice.supplierName}</td>
+                    <td class="py-3 px-3">${invoice.npwp}</td>
+                    <td class="py-3 px-3">${invoice.address}</td>
+                    <td class="py-3 px-3 text-center">
+                        <button class="text-pasti-blue hover:text-blue-700 text-xs font-semibold" onclick="viewDetail(${invoice.id})">VIEW</button>
+                    </td>
+                `;
+                invoiceTableBody.appendChild(row);
+            });
+            resultsSection.classList.remove('hidden');
+        }
+        
+        // Expose function for inline button click (Action column)
+        window.viewDetail = function(id) {
+            showModal('Invoice Detail', `Viewing details for Invoice ID: ${id}. This would navigate to a detailed view screen.`, false);
+        };
+
+
+        // --- Event Handlers ---
+        
+        searchButton.addEventListener('click', () => {
+            const supplierId = supplierIdInput.value.trim();
+            const regNo = regNoInput.value.trim();
+            const verificationDate = verificationDateInput.value;
+            
+            // In a real application, you would make an API call here.
+            
+            // Mock Data Filter: If supplier ID or Reg No is entered, use that to filter, otherwise show all.
+            let filteredData = mockInvoiceData.filter(invoice => {
+                const matchesId = supplierId ? invoice.supplierName.toLowerCase().includes(supplierId.toLowerCase()) : true;
+                const matchesRegNo = regNo ? invoice.verifNo === regNo : true;
+                // We're ignoring verificationDate for simplicity in this mock filter
+                return matchesId && matchesRegNo;
+            });
+            
+            if (filteredData.length > 0) {
+                // If we find data, simulate filling the supplier description
+                supplierDescInput.value = filteredData[0].supplierName + ' Tbk (Mock)';
+                showModal('Search Complete', `${filteredData.length} invoice(s) found matching the criteria.`, false);
+            } else {
+                 supplierDescInput.value = 'No matching supplier found (Mock)';
+                 showModal('No Results', 'No invoices found for the specified criteria.', true);
+            }
+
+            renderTable(filteredData);
+            
+            // Always ensure select all is unchecked after a new search
+            selectAllCheckbox.checked = false;
+        });
+
+        resetButton.addEventListener('click', () => {
+            // Clear all input fields
+            supplierIdInput.value = '';
+            supplierDescInput.value = '';
+            regNoInput.value = '';
+            verificationDateInput.value = '2025-11-06'; // Resetting to a default mock date
+            dropboxCodeInput.value = '';
+            
+            // Clear current invoices state
+            currentInvoices = []; 
+
+            // Hide results section and clear table body
+            resultsSection.classList.add('hidden');
+            invoiceTableBody.innerHTML = '';
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.disabled = true;
+            
+            showModal('Form Reset', 'The search criteria have been cleared.', false);
+        });
+
+        // Select All Checkbox logic
+        selectAllCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            document.querySelectorAll('.invoice-checkbox').forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
+        });
+
+        // Generate Dropbox logic
+        generateDropboxBtn.addEventListener('click', () => {
+            const checkedBoxes = document.querySelectorAll('.invoice-checkbox:checked');
+            const selectedCount = checkedBoxes.length;
+            const tableRows = invoiceTableBody.children;
+
+            if (selectedCount === 0) {
+                showModal('Selection Required', 'Please select at least one invoice to generate a Dropbox.', true);
+                return;
+            }
+
+            if (selectedCount > 6) {
+                showModal('Limit Exceeded', `You selected ${selectedCount} invoices. The maximum allowed is 6.`, true);
+                return;
+            }
+
+            const invoiceIds = Array.from(checkedBoxes).map(cb => parseInt(cb.getAttribute('data-id')));
+
+            // Mock Dropbox Generation
+            const dropboxCode = `DBX-${new Date().getFullYear()}${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
+            showModal('Dropbox Generated', `Successfully generated Dropbox: ${dropboxCode} for ${selectedCount} invoice(s). IDs: ${invoiceIds.join(', ')}`, false);
+
+            // Navigate to the upload page after a short delay
+            setTimeout(() => {
+                window.location.href = 'dropbox_upload.html';
+            }, 2000);
+
+        });
+        
+        // Initial setup for the date input to show a default value
+        verificationDateInput.value = new Date().toISOString().slice(0, 10);
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasti - Verification Transaction - Final Verification Save</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Custom Tailwind Configuration
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-red': '#e74c3c',
+                        'nav-bg': '#000080', 
+                        'nav-active-bg': '#0000AA',
+                        'nav-active-border': '#0000FF',
+                        'pasti-blue': '#3498db',
+                        'back-button-red': '#e74c3c',
+                        'pasti-dark-blue': '#293547', 
+                        'verification-border': '#ccc',
+                        'verification-bg': '#f7f7f7',
+                        'text-label': '#555',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Base styles */
+        body {
+            background-color: #f0f0f0; 
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .logo-section {
+            padding: 10px 20px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .menu-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            font-size: 14px;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: #0000AA;
+            border-left: 3px solid #3498db;
+        }
+        
+        /* Verification Form specific styles */
+        .verification-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px; /* Tighter spacing */
+        }
+        
+        .verification-label {
+            width: 150px; 
+            font-size: 14px;
+            color: var(--tw-colors-text-label);
+        }
+        
+        .verification-value {
+            border: 1px solid var(--tw-colors-verification-border);
+            background-color: var(--tw-colors-verification-bg);
+            padding: 4px 8px;
+            width: 200px; /* Standardized width for value boxes */
+            font-size: 14px;
+            color: #333;
+            border-radius: 3px;
+        }
+
+        .save-button {
+            background-color: green;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 3px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .cancel-button {
+            background-color: red;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 3px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-[#f0f0f0]">
+
+<div class="app-container">
+
+    <div class="sidebar">
+        <div class="logo-section">Pasti</div>
+        <hr style="border-color: #0000AA;">
+        <div class="menu-item-group">MENU</div>
+        <div class="menu-item">IT Service Management</div>
+        <div class="menu-item">Finance & Accounting</div>
+        <div class="menu-item">E-Filing</div>
+        <div class="menu-item">E-Verify</div>
+        <div class="menu-item">Maintain Master Method</div>
+        <div class="menu-item active">Verification Transaction</div>
+        <div class="menu-item">Re-Print Verification</div>
+        <div class="menu-item">Tax Invoice Process</div>
+        <div class="menu-item">e-Verify</div>
+        <div class="menu-item">Monitoring Transaction</div>
+        <div class="menu-item">Upload Data Payment Invoice</div>
+        <div class="menu-item-group" style="margin-top: 20px;">AHM-PASTI</div>
+    </div>
+
+    <div class="flex-1 flex flex-col bg-white overflow-hidden">
+        
+        <div class="flex justify-between items-center bg-primary-red text-white p-2 text-sm shadow-md flex-shrink-0">
+            <div class="flex">
+                <div class="px-3 cursor-pointer hover:bg-white hover:text-gray-800 rounded-t-lg">🏠 Home</div>
+                <div class="px-3 bg-white text-gray-800 font-semibold rounded-t-lg">Verification Transaction <span class="ml-2 cursor-pointer">x</span></div>
+            </div>
+            <div>6 Nov 2025 14:20:47</div> 
+        </div>
+
+        <div class="w-full bg-gray-100 border-b border-gray-300 flex-shrink-0">
+            <div class="flex items-center text-sm">
+                <div class="bg-gray-200 border-r border-gray-300 py-2 px-4 font-semibold text-gray-700">Verification Transaction</div>
+                <div class="bg-gray-200 border-r border-gray-300 py-2 px-4 font-semibold text-gray-700">Entry Document Data</div>
+                <div class="bg-gray-200 border-r border-gray-300 py-2 px-4 font-semibold text-gray-700">Entry Tax Invoice</div>
+                <div class="bg-white border-b-2 border-primary-red py-2 px-4 font-semibold text-gray-900 flex items-center">
+                    Transaction Verification (ahmfainv027v03)
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1 p-8 overflow-y-auto">
+            <div class="text-lg font-bold mb-4 text-gray-800">
+                8. Click "Save" 
+            </div>
+
+            <div class="bg-white p-6 rounded-md shadow-md max-w-xl border border-gray-200">
+                
+                <div class="text-sm font-semibold mb-4 border-b pb-2 text-pasti-dark-blue">
+                    Transaction Verification (Recap Certain Period Method)
+                </div>
+
+                <div class="mb-6 space-y-2">
+                    <p class="text-sm">You will claim an invoice with the following data:</p>
+                    
+                    <div class="verification-row">
+                        <span class="verification-label">Company</span>
+                        <div class="verification-value">PT. DYNAPLAST Tbk</div>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">Total Transaction</span>
+                        <div class="verification-value">11</div>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">Currency</span>
+                        <div class="verification-value">IDR</div>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">Receipt No.</span>
+                        <div class="verification-value">61</div>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">Receipt Date</span>
+                        <div class="verification-value">22-Oct-2025</div>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">Amount</span>
+                        <div class="verification-value">---</div>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">Tax Code</span>
+                        <div class="verification-value">VAT In Local</div>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">PPN</span>
+                        <div class="verification-value">---</div>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">PPh</span>
+                        <div class="verification-value">0</div>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">PPN 22 01</span>
+                        <div class="verification-value">0</div>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">Total Amount</span>
+                        <div class="verification-value">---</div>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">Total Transaction</span>
+                        <div class="verification-value">---</div>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">Tax Invoice No.</span>
+                        <div class="verification-value">68037500A9F90107</div>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">Tax Invoice Date</span>
+                        <div class="verification-value">22-Oct-2025</div>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">Bukti Pungut No</span>
+                        <div class="verification-value">---</div>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">Bukti Pungut Date</span>
+                        <div class="verification-value">---</div>
+                    </div>
+                    <div class="verification-row">
+                        <span class="verification-label">Terms of Payment (Days)</span>
+                        <div class="verification-value">30</div>
+                    </div>
+                </div>
+
+                <p class="text-xs text-red-600 mb-6">
+                    Warning: This Verification can not be changed! To cancel, press Cancel button
+                </p>
+
+                <div class="pt-2 flex space-x-4">
+                    <button id="saveButton" class="save-button hover:bg-blue-600 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-4 0V5a2 2 0 012-2h4a2 2 0 012 2v2m-6 0h6" />
+                        </svg>
+                        Save
+                    </button>
+                    
+                    <button type="button" onclick="window.history.back()" class="cancel-button hover:bg-red-700 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        Cancel
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('saveButton').addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('Verification data has been successfully saved!');
+        
+        // This is the final step, usually, it would redirect back to the search/home screen.
+        // For now, it just shows the alert.
+    });
+
+    // Ensure the correct sidebar item is marked active
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            if (item.textContent.trim() === 'Verification Transaction') {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    });
+</script>
+</body>
+</html>

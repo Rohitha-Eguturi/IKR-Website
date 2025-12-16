@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasti - Verification Transaction (GR/SR)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Custom Tailwind Configuration (same as original for consistent colors)
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-red': '#e74c3c',
+                        'nav-bg': '#000080', // Not used directly in this template, but kept for context
+                        'nav-active-bg': '#0000AA',
+                        'nav-active-border': '#0000FF',
+                        'table-header-bg-main': '#bdc3c7',
+                        'table-header-bg-sub': '#ecf0f1',
+                        'pasti-blue': '#3498db',
+                        'search-button-blue': '#3498db',
+                        'back-button-red': '#e74c3c',
+                        'pasti-dark-blue': '#293547', /* Used for the vertical placeholder bars */
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Base styles */
+        body {
+            background-color: #f0f0f0; 
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar Styles (from original context) */
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .logo-section {
+            padding: 10px 20px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .menu-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            font-size: 14px;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: #0000AA;
+            border-left: 3px solid #3498db;
+        }
+
+        .menu-item-group {
+            font-size: 12px;
+            font-weight: bold;
+            padding: 10px 20px 5px;
+            color: #bdc3c7;
+        }
+        
+        /* Input field in search bar */
+        .search-input {
+            border: 1px solid #ccc;
+            padding: 4px 8px;
+            border-radius: 3px;
+            width: 120px; 
+            font-size: 13px;
+        }
+
+        /* Table Styles (Matching the tight, dense style of the image) */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px; 
+        }
+
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 4px; /* Reduced padding */
+            text-align: center; /* Default center alignment for date/number columns */
+            white-space: nowrap; /* Prevent dates/numbers from wrapping */
+        }
+        
+        /* Alignment overrides */
+        .data-table th:nth-child(3), .data-table td:nth-child(3) { text-align: left; } /* 'Detail' column */
+        
+        /* Header Rows Styling */
+        .data-table thead tr th {
+            background-color: var(--tw-colors-table-header-bg-main); 
+            font-weight: bold;
+            color: #333;
+            padding: 6px 4px; /* Slightly more compact header */
+        }
+
+        /* Table body row colors */
+        .data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Right Panel Styling */
+        .right-panel {
+            min-width: 220px; /* Adjusted width for the panel */
+            padding: 10px;
+            background-color: white; 
+            border-left: 1px solid #ddd;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Start elements from the top */
+            align-items: flex-end; /* Align content to the right edge */
+            font-size: 11px;
+            padding-top: 50px; /* Space needed for the table header height */
+        }
+        
+        /* Style for the Entry Tax Invoice Button */
+        .entry-tax-btn {
+            background-color: #390ced;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            width: 100%; /* Match the width of the summary area */
+        }
+
+        /* Style for the dark blue placeholder bars in the right panel */
+        .bar-placeholder-large {
+            background-color: var(--tw-colors-pasti-dark-blue);
+            width: 70px; /* Width matching the image's estimate */
+            height: 50px; /* Tall bar for Amount */
+            margin-bottom: 5px; /* Spacing between bars */
+            display: inline-block;
+        }
+        .bar-placeholder-small {
+            background-color: var(--tw-colors-pasti-dark-blue);
+            width: 70px;
+            height: 14px; /* Shorter bar for PPN/PPh/Total */
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="bg-[#f0f0f0]">
+
+<div class="app-container">
+
+    <div class="sidebar">
+        <div class="logo-section">Pasti</div>
+        <hr style="border-color: #0000AA;">
+        <div class="menu-item-group">MENU</div>
+        <div class="menu-item">IT Service Management</div>
+        <div class="menu-item">Finance & Accounting</div>
+        <div class="menu-item">E-Filing</div>
+        <div class="menu-item">E-Verify</div>
+        <div class="menu-item">Maintain Master Method</div>
+        <div class="menu-item active">Verification Transaction</div>
+        <div class="menu-item">Re-Print Verification</div>
+        <div class="menu-item">Tax Invoice Process</div>
+        <div class="menu-item">e-Verify</div>
+        <div class="menu-item">Monitoring Transaction</div>
+        <div class="menu-item">Upload Data Payment Invoice</div>
+        <div class="menu-item-group" style="margin-top: 20px;">AHM-PASTI</div>
+    </div>
+
+    <div class="flex-1 flex flex-col bg-white overflow-hidden">
+        
+        <div class="flex justify-between items-center bg-primary-red text-white p-2 text-sm shadow-md flex-shrink-0">
+            <div class="flex">
+                <div class="px-3 cursor-pointer hover:bg-white hover:text-gray-800 rounded-t-lg">🏠 Home</div>
+                <div class="px-3 bg-white text-gray-800 rounded-t-lg font-semibold">Verification Transaction (GR/SR) <span class="ml-2 cursor-pointer">x</span></div>
+            </div>
+            <div>6 Nov 2025 14:20:47</div> 
+        </div>
+
+        <div class="p-4 bg-white flex-shrink-0 border-b border-gray-200">
+            <div class="flex flex-col space-y-4 bg-gray-50 p-3 rounded-md border border-gray-100">
+                <div class="flex flex-col text-xs font-semibold text-gray-700">
+                    <div>Currency</div>
+                    <select class="search-input w-[80px] text-gray-800">
+                        <option>IDR</option>
+                        <option>USD</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col text-xs font-semibold text-gray-700">
+                    <div>(Begin) Ref Doc Date</div>
+                    <input type="date" value="2025-10-22" class="search-input text-gray-800">
+                </div>
+
+                <div class="flex flex-col text-xs font-semibold text-gray-700">
+                    <div>(End) Ref Doc Date</div>
+                    <input type="date" value="2025-10-22" class="search-input text-gray-800">
+                </div>
+
+                <div class="flex space-x-4">
+                    <button class="action-button bg-search-button-blue text-white shadow-md hover:bg-blue-600 px-6 py-2 text-sm">
+                        Search
+                    </button>
+
+                    <button class="action-button bg-back-button-red text-white shadow-md hover:bg-red-700 px-6 py-2 text-sm">
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-1 overflow-hidden">
+            
+            <div class="flex-1 overflow-x-auto overflow-y-auto">
+                <div class="border border-gray-200 shadow-sm">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllCheckbox" class="w-3 h-3 text-primary-red border-gray-300 rounded focus:ring-primary-red"></th> 
+                                <th>No.</th>
+                                <th>Detail</th>
+                                <th>Ref Document No.</th>
+                                <th>Ref Document Date</th>
+                                <th>Transaction No.</th>
+                                <th>Transaction Date</th>
+                                <th>Superior Doc. No.</th>
+                                <th style="min-width: 60px;">PPN</th>
+                                <th style="min-width: 60px;">PPh</th>
+                                <th style="min-width: 90px;">Total Amount</th>
+                                <th style="min-width: 90px;">Total Transaction</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <script>
+                                // Function to generate a row
+                                function generateRow(i) {
+                                    return `<tr>
+                                        <td><input type="checkbox" class="transaction-checkbox w-3 h-3 text-primary-red border-gray-300 rounded focus:ring-primary-red" checked></td>
+                                        <td>${i}</td>
+                                        <td>A</td>
+                                        <td>[Data]</td>
+                                        <td>22-Oct-2025</td>
+                                        <td>[Data]</td>
+                                        <td>22-Oct-2025</td>
+                                        <td>[Data]</td>
+                                        <td>[Data]</td>
+                                        <td>[Data]</td>
+                                        <td>[Amount]</td>
+                                        <td>[Amount]</td>
+                                    </tr>`;
+                                }
+                                // Loop to render 11 rows
+                                for (let i = 1; i <= 11; i++) {
+                                    document.write(generateRow(i));
+                                }
+                            </script>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-start items-center mt-2 text-gray-600 text-xs pl-1">
+                    <span class="mr-2">Showing 1 to 11 of 11 rows</span>
+                    <select class="border border-gray-300 p-1 rounded text-xs">
+                        <option>15</option>
+                        <option>30</option>
+                        <option>50</option>
+                    </select>
+                    <span>rows per page</span>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="w-full space-y-1 mb-4 text-xs font-medium">
+                    <div class="flex justify-between items-center text-gray-700">
+                        <div class="flex flex-col text-right">
+                            <span>Amount</span>
+                        </div>
+                        <div class="bar-placeholder-large"></div>
+                    </div>
+
+                    <div class="flex justify-between items-center text-gray-700">
+                        <div class="flex flex-col text-right">
+                            <span>PPN</span>
+                            <span>PPh</span>
+                        </div>
+                        <div class="bar-placeholder-small"></div>
+                    </div>
+
+                    <div class="text-xs font-bold pt-2 text-right">
+                        <div>PPN 22 01</div>
+                    </div>
+
+                    <div class="flex justify-between items-center text-gray-800 font-bold mt-2">
+                        <span class="pt-2">Total Amount</span>
+                        <div class="bar-placeholder-small"></div>
+                    </div>
+
+                    <div class="flex justify-between items-center text-gray-800 font-bold">
+                        <span>Total Transaction</span>
+                        <div class="bar-placeholder-small"></div>
+                    </div>
+                </div>
+
+                <button id="entryTaxInvoiceBtn" class="entry-tax-btn">
+                    Entry Tax Invoice
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Simple JavaScript to handle the 'Select All' checkbox logic
+    document.addEventListener('DOMContentLoaded', () => {
+        const selectAll = document.getElementById('selectAllCheckbox');
+        const detailCheckboxes = document.querySelectorAll('.transaction-checkbox'); 
+        const entryTaxInvoiceBtn = document.getElementById('entryTaxInvoiceBtn'); // Get the button
+
+        const updateSelectAll = () => {
+            const checkedCount = Array.from(detailCheckboxes).filter(cb => cb.checked).length;
+            
+            const allChecked = checkedCount === detailCheckboxes.length && detailCheckboxes.length > 0;
+            selectAll.checked = allChecked;
+            selectAll.indeterminate = checkedCount > 0 && checkedCount < detailCheckboxes.length;
+        };
+
+        selectAll.addEventListener('change', (e) => {
+            detailCheckboxes.forEach(checkbox => {
+                checkbox.checked = e.target.checked;
+            });
+            updateSelectAll();
+        });
+
+        detailCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateSelectAll);
+        });
+
+        // Event listener for the "Entry Tax Invoice" button
+        entryTaxInvoiceBtn.addEventListener('click', () => {
+            // Navigate to the new page when clicked
+            window.location.href = 'entry_tax_invoice.html';
+        });
+
+        // Initial state update
+        updateSelectAll();
+    });
+</script>
+
+</body>
+</html>

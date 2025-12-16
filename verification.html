@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasti - Verification Transaction Mockup (Final Headers V5)</title>
+    <style>
+        /* CSS is included here for simplicity. In a real project, this would be in a separate .css file. */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* --- Left Sidebar (Pasti Menu) --- */
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50; 
+            color: white;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .logo-section {
+            padding: 10px 20px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .menu-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            font-size: 14px;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: #34495e;
+            border-left: 3px solid #3498db; 
+        }
+
+        .menu-item-group {
+            font-size: 12px;
+            font-weight: bold;
+            padding: 10px 20px 5px;
+            color: #bdc3c7;
+        }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+        }
+
+        /* --- Top Header (Red Bar) --- */
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #e74c3c; 
+            color: white;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        .header-tabs {
+            display: flex;
+        }
+
+        .tab {
+            padding: 5px 15px;
+            cursor: pointer;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .tab.active {
+            background-color: white;
+            color: #333;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+        
+        /* --- Transaction Body --- */
+        .transaction-body {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .search-area {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-row label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .search-row select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            min-width: 200px;
+        }
+
+        .button-group button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .search-btn {
+            background-color: #3498db; 
+            color: white;
+        }
+
+        .reset-btn {
+            background-color: #95a5a6; 
+            color: white;
+        }
+
+        /* --- Transaction Table --- */
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        /* General Cell Styling */
+        .transaction-table th, .transaction-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        /* Header Row 1 Styling */
+        .transaction-table thead tr:first-child th {
+            background-color: #bdc3c7; 
+            font-weight: bold;
+        }
+        
+        /* Header Row 2 Styling */
+        .transaction-table thead tr:nth-child(2) th {
+            background-color: #ecf0f1; 
+            font-weight: normal;
+            padding: 5px 8px; 
+        }
+        
+        /* Data alignment for numbers */
+        .transaction-table tbody td:nth-child(3), /* Currency */
+        .transaction-table tbody td:nth-child(4), /* Amount */
+        .transaction-table tbody td:nth-child(5), /* Transaction */
+        .transaction-table tbody td:nth-child(6), /* Total Verified */
+        .transaction-table tbody td:nth-child(7) /* Total Unverified */
+        {
+            text-align: right;
+        }
+
+        /* Special styling for 'Period' column to mimic the link/clickable style */
+        .period-link {
+            color: #3498db;
+            text-decoration: none;
+            cursor: pointer;
+            text-align: left !important;
+            display: block; /* Make the whole cell area clickable */
+            padding: inherit;
+            margin: -8px; /* Offset the cell padding */
+        }
+        
+        .transaction-table td:nth-child(2) {
+             padding: 0; /* Remove padding from cell containing the link */
+        }
+
+        /* Special styling for the 'Unverified Transaction' column (the blue bar) */
+        .unverified-cell {
+            position: relative;
+            text-align: center !important;
+            font-weight: bold;
+        }
+        .blue-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: #3498db;
+            opacity: 0.3; 
+            pointer-events: none;
+        }
+
+        .clickable-icon {
+            color: #e74c3c; /* Red color, as seen in the image */
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        /* Highlight the row the mouse pointer is on in the image */
+        .highlighted-row {
+            background-color: #fcf8e3; /* Light yellow background */
+        }
+        
+        /* Style for the method column text */
+        .method-column-text {
+            text-align: left;
+            padding-left: 5px;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <div class="sidebar">
+        <div class="logo-section">Pasti</div>
+        <hr style="border-color: #34495e;">
+        <div class="menu-item-group">MENU</div>
+        <div class="menu-item">IT Service Management</div>
+        <div class="menu-item">Finance & Accounting</div>
+        <div class="menu-item">E-Filing</div>
+        <div class="menu-item">E-Verify</div>
+        <div class="menu-item">Maintain Master Method</div>
+        <div class="menu-item active">Verification Transaction</div>
+        <div class="menu-item">Re-Print Verification</div>
+        <div class="menu-item">Tax Invoice Process</div>
+        <div class="menu-item">e-Verify</div>
+        <div class="menu-item">Monitoring Transaction</div>
+        <div class="menu-item">Upload Data Payment Invoice</div>
+        <div class="menu-item-group" style="margin-top: 20px;">ABOUT PASTI</div>
+    </div>
+    
+    <div class="main-content">
+        
+        <div class="header-top">
+            <div class="header-tabs">
+                <div class="tab">🏠 Home</div>
+                <div class="tab active">Verification Transaction <span style="margin-left: 10px;">x</span></div>
+            </div>
+            <div>6-Nov-2025 14:20:33</div>
+        </div>
+        
+        <div class="transaction-body">
+            
+            <div class="search-area">
+                <div class="search-row">
+                    <label for="transaction-type">Transaction*</label>
+                    <select id="transaction-type">
+                        <option value="GL-SR">GL/SR</option>
+                        <option value="Other">Other Type</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button class="search-btn">🔍 Search</button>
+                    <button class="reset-btn">⟳ Reset</button>
+                </div>
+            </div>
+
+            <p><strong>3. Then, select the month to be processed, click on period column</strong></p>
+
+            <table class="transaction-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2">No.</th>
+                        <th rowspan="2">Period</th>
+                        <th rowspan="2">Currency</th>
+                        <th rowspan="2">Amount</th>
+                        <th colspan="3">Total</th> 
+                        <th rowspan="2">Method</th> 
+                        <th colspan="2">Tax invoice</th> </tr>
+                    <tr>
+                        <th>Transaction</th>
+                        <th>Total Verified</th>
+                        <th>Total Unverified</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlighted-row"> 
+                        <td>1</td>
+                        <td><a href="verification_detail.html?period=nov2025" class="period-link">NOV 2025</a></td>
+                        <td>IDR</td>
+                        <td>479</td>
+                        <td>479</td>
+                        <td>0</td>
+                        <td class="unverified-cell">
+                            <div class="blue-bar" style="width: 100%;"></div>
+                            0
+                        </td>
+                        <td class="method-column-text">Method Recap<br>Certain Periode</td> 
+                        <td></td> 
+                        <td style="text-align: center;"><span class="clickable-icon">...</span></td> 
+                    </tr>
+                    <tr> 
+                        <td>2</td>
+                        <td><a href="verification_detail.html?period=oct2025" class="period-link">OCT 2025</a></td>
+                        <td>IDR</td>
+                        <td>3452</td>
+                        <td>3452</td>
+                        <td>2838</td>
+                        <td class="unverified-cell" style="background-color: #fdd; color: #e74c3c;">
+                            <div class="blue-bar" style="width: 17.8%;"></div>
+                            <strong style="color: #e74c3c; position: relative; z-index: 1;">614</strong> 
+                        </td>
+                        <td class="method-column-text">Method Recap<br>Certain Periode</td> 
+                        <td></td>
+                        <td style="text-align: center;"><span class="clickable-icon">...</span></td>
+                    </tr>
+                    <tr> 
+                        <td>3</td>
+                        <td><a href="verification_detail.html?period=sep2025" class="period-link">SEP 2025</a></td>
+                        <td>IDR</td>
+                        <td>3370</td>
+                        <td>3370</td>
+                        <td>3370</td>
+                        <td class="unverified-cell">
+                            <div class="blue-bar" style="width: 100%;"></div>
+                            0
+                        </td>
+                        <td class="method-column-text">Method Recap<br>Certain Periode</td> 
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td><a href="verification_detail.html?period=aug2025" class="period-link">AUG 2025</a></td>
+                        <td>IDR</td>
+                        <td>3426</td>
+                        <td>3426</td>
+                        <td>3426</td>
+                        <td class="unverified-cell">
+                            <div class="blue-bar" style="width: 100%;"></div>
+                            0
+                        </td>
+                        <td class="method-column-text">Method Recap<br>Certain Periode</td> 
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td><a href="verification_detail.html?period=jul2025" class="period-link">JUL 2025</a></td>
+                        <td>IDR</td>
+                        <td>3520</td>
+                        <td>3520</td>
+                        <td>3520</td>
+                        <td class="unverified-cell">
+                            <div class="blue-bar" style="width: 100%;"></div>
+                            0
+                        </td>
+                        <td class="method-column-text">Method Recap<br>Certain Periode</td> 
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td><a href="verification_detail.html?period=jun2025" class="period-link">JUN 2025</a></td>
+                        <td>IDR</td>
+                        <td>3838</td>
+                        <td>3838</td>
+                        <td>3838</td>
+                        <td class="unverified-cell">
+                            <div class="blue-bar" style="width: 100%;"></div>
+                            0
+                        </td>
+                        <td class="method-column-text">Method Recap<br>Certain Periode</td> 
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td><a href="verification_detail.html?period=may2025" class="period-link">MAY 2025</a></td>
+                        <td>IDR</td>
+                        <td>2823</td>
+                        <td>2823</td>
+                        <td>2823</td>
+                        <td class="unverified-cell">
+                            <div class="blue-bar" style="width: 100%;"></div>
+                            0
+                        </td>
+                        <td class="method-column-text">Method Recap<br>Certain Periode</td> 
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td><a href="verification_detail.html?period=apr2025" class="period-link">APR 2025</a></td>
+                        <td>IDR</td>
+                        <td>2670</td>
+                        <td>2670</td>
+                        <td>2670</td>
+                        <td class="unverified-cell">
+                            <div class="blue-bar" style="width: 100%;"></div>
+                            0
+                        </td>
+                        <td class="method-column-text">Method Recap<br>Certain Periode</td> 
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td><a href="verification_detail.html?period=mar2025" class="period-link">MAR 2025</a></td>
+                        <td>IDR</td>
+                        <td>3105</td>
+                        <td>3105</td>
+                        <td>3105</td>
+                        <td class="unverified-cell">
+                            <div class="blue-bar" style="width: 100%;"></div>
+                            0
+                        </td>
+                        <td class="method-column-text">Method Recap<br>Certain Periode</td> 
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

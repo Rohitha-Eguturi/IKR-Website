@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasti - Verification Transaction - Tax Invoice Entry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Custom Tailwind Configuration (same as previous screens)
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-red': '#e74c3c',
+                        'nav-bg': '#000080', 
+                        'nav-active-bg': '#0000AA',
+                        'nav-active-border': '#0000FF',
+                        'table-header-bg-main': '#bdc3c7',
+                        'table-header-bg-sub': '#ecf0f1',
+                        'pasti-blue': '#3498db',
+                        'search-button-blue': '#3498db',
+                        'back-button-red': '#e74c3c',
+                        'pasti-dark-blue': '#293547', 
+                        'success-message-green': '#2ecc71', 
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Base styles */
+        body {
+            background-color: #f0f0f0; 
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .logo-section {
+            padding: 10px 20px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .menu-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            font-size: 14px;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: #0000AA;
+            border-left: 3px solid #3498db;
+        }
+
+        .menu-item-group {
+            font-size: 12px;
+            font-weight: bold;
+            padding: 10px 20px 5px;
+            color: #bdc3c7;
+        }
+
+        /* Form styling */
+        .form-label {
+            width: 120px;
+            font-size: 14px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-input {
+            border: 1px solid #ccc;
+            padding: 6px 10px;
+            border-radius: 3px;
+            width: 200px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* Table Styles (New table for this screen) */
+        .data-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            font-size: 11px; 
+            min-width: 800px;
+        }
+        .data-table th, .data-table td { 
+            border: 1px solid #ddd; 
+            padding: 4px; 
+            text-align: center; 
+            white-space: nowrap; 
+        }
+        .data-table thead tr th { 
+            background-color: var(--tw-colors-table-header-bg-main); 
+            font-weight: bold; 
+            color: #333; 
+            padding: 6px 4px; 
+        }
+        .data-table tbody tr:nth-child(even) { 
+            background-color: #f9f9f9; 
+        }
+        .data-bar {
+             background-color: var(--tw-colors-pasti-dark-blue);
+             height: 15px; 
+             margin: 0 auto; 
+             border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="bg-[#f0f0f0]">
+
+<div class="app-container">
+
+    <div class="sidebar">
+        <div class="logo-section">Pasti</div>
+        <hr style="border-color: #0000AA;">
+        <div class="menu-item-group">MENU</div>
+        <div class="menu-item">IT Service Management</div>
+        <div class="menu-item">Finance & Accounting</div>
+        <div class="menu-item">E-Filing</div>
+        <div class="menu-item">E-Verify</div>
+        <div class="menu-item">Maintain Master Method</div>
+        <div class="menu-item active">Verification Transaction</div>
+        <div class="menu-item">Re-Print Verification</div>
+        <div class="menu-item">Tax Invoice Process</div>
+        <div class="menu-item">e-Verify</div>
+        <div class="menu-item">Monitoring Transaction</div>
+        <div class="menu-item">Upload Data Payment Invoice</div>
+        <div class="menu-item-group" style="margin-top: 20px;">AHM-PASTI</div>
+    </div>
+
+    <div class="flex-1 flex flex-col bg-white overflow-hidden">
+        
+        <div class="flex justify-between items-center bg-primary-red text-white p-2 text-sm shadow-md flex-shrink-0">
+            <div class="flex">
+                <div class="px-3 cursor-pointer hover:bg-white hover:text-gray-800 rounded-t-lg">🏠 Home</div>
+                <div class="px-3 bg-white text-gray-800 font-semibold rounded-t-lg">Verification Transaction <span class="ml-2 cursor-pointer">x</span></div>
+            </div>
+            <div>6 Nov 2025 14:20:47</div> 
+        </div>
+
+        <div class="w-full bg-gray-100 border-b border-gray-300 flex-shrink-0">
+            <div class="flex items-center text-sm">
+                <div class="bg-gray-200 border-r border-gray-300 py-2 px-4 font-semibold text-gray-700">Verification Transaction</div>
+                <div class="bg-gray-200 border-r border-gray-300 py-2 px-4 font-semibold text-gray-700">Entry Document Data (ahmfainv027ip02)</div>
+                <div class="bg-white border-b-2 border-primary-red py-2 px-4 font-semibold text-gray-900 flex items-center">
+                    Entry Tax Invoice (ahmfainv027ip01)
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1 p-4 overflow-y-auto">
+            <div class="text-lg font-bold mb-4 text-gray-800">
+                5. Input the Tax Invoice number and date according to the invoice, then click "Submit"
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-md shadow-sm mb-6 border border-gray-200">
+                <form id="taxInvoiceForm" class="space-y-4 flex items-center space-x-8">
+                    
+                    <div class="flex items-center">
+                        <label for="taxInvoiceNo" class="form-label flex items-center">Tax Invoice No. <span class="text-primary-red ml-1">*</span></label>
+                        <input 
+                            type="text" 
+                            id="taxInvoiceNo" 
+                            class="form-input" 
+                            value="68037500A9F90107" 
+                            required>
+                    </div>
+
+                    <div class="flex items-center">
+                        <label for="taxInvoiceDate" class="form-label flex items-center">Tax Invoice Date <span class="text-primary-red ml-1">*</span></label>
+                        <input 
+                            type="text" 
+                            id="taxInvoiceDate" 
+                            class="form-input" 
+                            value="22-Oct-2025" 
+                            required>
+                        <span class="ml-2 text-gray-500 cursor-pointer">📅</span>
+                    </div>
+
+                    <div class="pt-1 flex space-x-4">
+                        <button type="submit" class="submit-button bg-pasti-blue text-white hover:bg-blue-600 px-6 py-2 text-sm font-bold rounded-md">
+                            Submit
+                        </button>
+                        
+                        <button type="button" onclick="window.history.back()" class="cancel-button bg-back-button-red text-white hover:bg-red-700 px-6 py-2 text-sm font-bold rounded-md">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="flex-1 overflow-x-auto overflow-y-auto">
+                <div class="border border-gray-200 shadow-sm">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Ref Document No</th>
+                                <th>Ref Document Date</th>
+                                <th>Transaction No</th>
+                                <th>Transaction Date</th>
+                                <th>Superior Doc. No</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <script>
+                                function generateTableRow(i) {
+                                    return `<tr>
+                                        <td>${i}</td>
+                                        <td><div class="data-bar" style="width: ${30 + i * 2}px;"></div></td>
+                                        <td>22-Oct-2025</td>
+                                        <td><div class="data-bar" style="width: ${40 + i * 3}px;"></div></td>
+                                        <td>22-Oct-2025</td>
+                                        <td><div class="data-bar" style="width: ${50 + i * 4}px;"></div></td>
+                                        <td><div class="data-bar" style="width: ${60 + i * 5}px;"></div></td>
+                                    </tr>`;
+                                }
+                                for (let i = 1; i <= 10; i++) {
+                                    document.write(generateTableRow(i));
+                                }
+                            </script>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('taxInvoiceForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Submitted Tax Invoice No: ' + document.getElementById('taxInvoiceNo').value + ' and Date: ' + document.getElementById('taxInvoiceDate').value);
+        
+        // *** CRITICAL LINK: Redirects to the final verification/save screen ***
+        window.location.href = 'transaction_verification.html'; 
+    });
+
+    // Ensure the correct sidebar item is marked active
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            if (item.textContent.trim() === 'Verification Transaction') {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    });
+</script>
+</body>
+</html>
