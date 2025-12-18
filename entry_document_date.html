@@ -6,7 +6,7 @@
     <title>Pasti - Verification Transaction (GR/SR) - Document Selection</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Custom Tailwind Configuration (same as original for consistent colors)
+        // Custom Tailwind Configuration
         tailwind.config = {
             theme: {
                 extend: {
@@ -23,7 +23,7 @@
                         'pasti-blue': '#3498db',
                         'search-button-blue': '#3498db',
                         'back-button-red': '#e74c3c',
-                        'entry-doc-btn-red': '#cc0000', // A specific dark red for the action button
+                        'entry-doc-btn-red': '#cc0000',
                         'pasti-dark-blue': '#293547', 
                         'success-message-green': '#2ecc71', 
                     }
@@ -36,43 +36,40 @@
         body { background-color: #f0f0f0; font-family: Arial, sans-serif; margin: 0; }
         .app-container { display: flex; height: 100vh; }
 
-        /* Sidebar Styles (re-used) */
+        /* Sidebar Styles */
         .sidebar { width: 250px; background-color: #2c3e50; color: white; padding-top: 20px; box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); flex-shrink: 0; overflow-y: auto; }
         .logo-section { padding: 10px 20px; font-size: 24px; font-weight: bold; margin-bottom: 20px; }
         .menu-item { padding: 10px 20px; cursor: pointer; border-left: 3px solid transparent; font-size: 14px; }
         .menu-item:hover, .menu-item.active { background-color: #0000AA; border-left: 3px solid #3498db; }
         .menu-item-group { font-size: 12px; font-weight: bold; padding: 10px 20px 5px; color: #bdc3c7; }
         
-        /* Input field in search bar */
         .search-input { border: 1px solid #ccc; padding: 4px 8px; border-radius: 3px; width: 120px; font-size: 13px; }
 
-        /* Table Styles (re-used) */
+        /* Table Styles */
         .data-table { width: 100%; border-collapse: collapse; font-size: 11px; }
-        .data-table th, .data-table td { border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap; }
+        .data-table th, .data-table td { border: 1px solid #ddd; padding: 6px 4px; text-align: center; white-space: nowrap; }
         .data-table th:nth-child(3), .data-table td:nth-child(3) { text-align: left; } 
-        .data-table thead tr th { background-color: var(--tw-colors-table-header-bg-main); font-weight: bold; color: #333; padding: 6px 4px; }
+        .data-table thead tr th { background-color: #bdc3c7; font-weight: bold; color: #333; }
         .data-table tr:nth-child(even) { background-color: #f9f9f9; }
         
         /* Right Panel Styling */
         .right-panel {
-            min-width: 220px;
-            padding: 10px;
+            min-width: 250px;
+            padding: 15px;
             background-color: white; 
             border-left: 1px solid #ddd;
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            align-items: flex-end;
-            font-size: 11px;
             padding-top: 50px; 
+            font-size: 11px;
         }
         
-        /* --- CORRECTED BUTTON STYLE --- */
         .entry-doc-data-btn {
-            background-color: red; 
+            background-color: #cc0000; 
             color: white;
-            padding: 6px 10px;
+            padding: 8px 10px;
             border-radius: 3px;
             font-size: 12px;
             cursor: pointer;
@@ -80,11 +77,11 @@
             text-align: center;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
             width: 100%; 
+            margin-top: 20px;
         }
 
-        /* Style for the Success Message */
         .success-message {
-            background-color: var(--tw-colors-success-message-green);
+            background-color: #2ecc71;
             color: white;
             font-weight: bold;
             text-align: center;
@@ -93,28 +90,16 @@
             border-radius: 4px;
             font-size: 13px;
         }
-        
-        /* Style for the dark blue placeholder bars (re-used) */
-        .bar-placeholder-large {
-            background-color: var(--tw-colors-pasti-dark-blue);
-            width: 70px;
-            height: 50px;
-            margin-bottom: 5px;
-            display: inline-block;
-        }
-        .bar-placeholder-small {
-            background-color: var(--tw-colors-pasti-dark-blue);
-            width: 70px;
-            height: 14px;
-            margin-bottom: 5px;
-            display: inline-block;
+
+        .value-cell {
+            font-family: 'Courier New', Courier, monospace;
+            text-align: right !important;
         }
     </style>
 </head>
 <body class="bg-[#f0f0f0]">
 
 <div class="app-container">
-
     <div class="sidebar">
         <div class="logo-section">Pasti</div>
         <hr style="border-color: #0000AA;">
@@ -134,7 +119,6 @@
     </div>
 
     <div class="flex-1 flex flex-col bg-white overflow-hidden">
-        
         <div class="flex justify-between items-center bg-primary-red text-white p-2 text-sm shadow-md flex-shrink-0">
             <div class="flex">
                 <div class="px-3 cursor-pointer hover:bg-white hover:text-gray-800 rounded-t-lg">🏠 Home</div>
@@ -149,47 +133,38 @@
             </div>
             
             <div class="flex flex-col space-y-4 bg-gray-50 p-3 rounded-md border border-gray-100">
-                <div class="text-xs font-semibold text-gray-700">
-                    Transaction: GR/SR
-                </div>
-                
-                <div class="flex flex-col text-xs font-semibold text-gray-700">
-                    <div>Currency</div>
-                    <select class="search-input w-[80px] text-gray-800">
-                        <option>IDR</option>
+                <div class="text-xs font-semibold text-gray-700">Transaction: GR/SR</div>
+                <div class="flex space-x-6">
+                    <div class="flex flex-col text-xs font-semibold text-gray-700">
+                        <div>Currency</div>
+                        <select class="search-input w-[80px] text-gray-800">
+                            <option>IDR</option>
                         </select>
-                </div>
-
-                <div class="flex flex-col text-xs font-semibold text-gray-700">
-                    <div>(Begin) Ref Doc Date</div>
-                    <input type="date" value="2025-10-22" class="search-input text-gray-800">
-                </div>
-
-                <div class="flex flex-col text-xs font-semibold text-gray-700">
-                    <div>(End) Ref Doc Date</div>
-                    <input type="date" value="2025-10-22" class="search-input text-gray-800">
+                    </div>
+                    <div class="flex flex-col text-xs font-semibold text-gray-700">
+                        <div>(Begin) Ref Doc Date</div>
+                        <input type="date" value="2025-11-22" class="search-input text-gray-800">
+                    </div>
+                    <div class="flex flex-col text-xs font-semibold text-gray-700">
+                        <div>(End) Ref Doc Date</div>
+                        <input type="date" value="2025-11-22" class="search-input text-gray-800">
+                    </div>
                 </div>
 
                 <div class="flex space-x-4">
-                    <button class="action-button bg-search-button-blue text-white shadow-md hover:bg-blue-600 px-6 py-2 text-sm">
-                        Search
-                    </button>
-
-                    <button class="action-button bg-back-button-red text-white shadow-md hover:bg-red-700 px-6 py-2 text-sm">
-                        Back
-                    </button>
+                    <button class="bg-search-button-blue text-white shadow-md hover:bg-blue-600 px-6 py-1.5 text-sm rounded">Search</button>
+                    <button class="bg-back-button-red text-white shadow-md hover:bg-red-700 px-6 py-1.5 text-sm rounded">Back</button>
                 </div>
             </div>
         </div>
 
         <div class="flex flex-1 overflow-hidden">
-            
-            <div class="flex-1 overflow-x-auto overflow-y-auto">
+            <div class="flex-1 overflow-x-auto overflow-y-auto p-2">
                 <div class="border border-gray-200 shadow-sm">
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th><input type="checkbox" id="selectAllCheckbox" class="w-3 h-3 text-primary-red border-gray-300 rounded focus:ring-primary-red"></th> 
+                                <th><input type="checkbox" id="selectAllCheckbox" class="w-3 h-3"></th> 
                                 <th>No.</th>
                                 <th>Detail</th>
                                 <th>Ref Document No.</th>
@@ -197,42 +172,22 @@
                                 <th>Transaction No.</th>
                                 <th>Transaction Date</th>
                                 <th>Superior Doc. No.</th>
-                                <th style="min-width: 60px;">PPN</th>
-                                <th style="min-width: 60px;">PPh</th>
-                                <th style="min-width: 90px;">Total Amount</th>
-                                <th style="min-width: 90px;">Total Transaction</th>
+                                <th>PPN</th>
+                                <th>PPh</th>
+                                <th>Total Amount</th>
+                                <th>Total Transaction</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <script>
-                                function generateRow(i) {
-                                    return `<tr>
-                                        <td><input type="checkbox" class="transaction-checkbox w-3 h-3 text-primary-red border-gray-300 rounded focus:ring-primary-red" checked></td>
-                                        <td>${i}</td>
-                                        <td><span style="color: red; font-weight: bold;">${i}</span></td>
-                                        <td><div class="data-bar" style="width: 50px;"></div></td>
-                                        <td>22-Oct-2025</td>
-                                        <td><div class="data-bar" style="width: 50px;"></div></td>
-                                        <td>22-Oct-2025</td>
-                                        <td><div class="data-bar" style="width: 50px;"></div></td>
-                                        <td><div class="data-bar" style="width: 50px;"></div></td>
-                                        <td><div class="data-bar" style="width: 30px;"></div></td>
-                                        <td><div class="data-bar" style="width: 30px;"></div></td>
-                                        <td><div class="data-bar" style="width: 40px;"></div></td>
-                                        <td><div class="data-bar" style="width: 40px;"></div></td>
-                                    </tr>`;
-                                }
-                                for (let i = 1; i <= 10; i++) {
-                                    document.write(generateRow(i));
-                                }
-                            </script>
+                        <tbody id="transaction-body">
+                            <!-- JS Inject -->
                         </tbody>
                     </table>
                 </div>
 
                 <div class="flex justify-start items-center mt-2 text-gray-600 text-xs pl-1">
                     <span class="mr-2">Showing 1 to 10 of 10 rows</span>
-                    <select class="border border-gray-300 p-1 rounded text-xs">
+                    <select class="border border-gray-300 p-1 rounded text-xs mr-2">
+                        <option>10</option>
                         <option>15</option>
                     </select>
                     <span>rows per page</span>
@@ -240,27 +195,28 @@
             </div>
 
             <div class="right-panel">
-                <div class="w-full space-y-1 mb-4 text-xs font-medium">
-                    <div class="flex justify-between items-center text-gray-700">
-                        <div class="flex flex-col text-right"><span>Amount</span></div>
-                        <div class="bar-placeholder-large"></div>
+                <div class="w-full space-y-3 mb-4">
+                    <div class="flex justify-between border-b pb-1">
+                        <span class="text-gray-600">Amount</span>
+                        <span class="font-mono font-bold" id="panel-amount">15.000.000</span>
                     </div>
-
-                    <div class="flex justify-between items-center text-gray-700">
-                        <div class="flex flex-col text-right"><span>PPN</span><span>PPh</span></div>
-                        <div class="bar-placeholder-small"></div>
+                    <div class="flex justify-between border-b pb-1">
+                        <span class="text-gray-600">PPN</span>
+                        <span class="font-mono" id="panel-ppn">1.650.000</span>
                     </div>
-
-                    <div class="text-xs font-bold pt-2 text-right"><div>PPN 22 01</div></div>
-
-                    <div class="flex justify-between items-center text-gray-800 font-bold mt-2">
-                        <span class="pt-2">Total Amount</span>
-                        <div class="bar-placeholder-small"></div>
+                    <div class="flex justify-between border-b pb-1">
+                        <span class="text-gray-600">PPh</span>
+                        <span class="font-mono" id="panel-pph">0</span>
                     </div>
-
-                    <div class="flex justify-between items-center text-gray-800 font-bold">
-                        <span>Total Transaction</span>
-                        <div class="bar-placeholder-small"></div>
+                    <div class="text-right text-[10px] text-blue-600 font-bold uppercase">PPN 11% Applied</div>
+                    
+                    <div class="flex justify-between pt-2 border-t-2 border-gray-800">
+                        <span class="font-bold">Total Amount</span>
+                        <span class="font-mono font-bold text-red-600" id="panel-total">16.650.000</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-bold">Total Trans.</span>
+                        <span class="font-mono font-bold" id="panel-count">10</span>
                     </div>
                 </div>
 
@@ -274,39 +230,57 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const tableBody = document.getElementById('transaction-body');
+        const formatCurrency = (num) => new Intl.NumberFormat('id-ID').format(num);
+
+        const dummyData = [
+            { ref: '592023', tNo: 'TRX-001', sup: 'SUP-99', ppn: 110000, pph: 0, amt: 1000000 },
+            { ref: '601124', tNo: 'TRX-002', sup: 'SUP-99', ppn: 220000, pph: 0, amt: 2000000 },
+            { ref: '610425', tNo: 'TRX-003', sup: 'SUP-98', ppn: 55000, pph: 0, amt: 500000 },
+            { ref: '620888', tNo: 'TRX-004', sup: 'SUP-97', ppn: 132000, pph: 0, amt: 1200000 },
+            { ref: '630210', tNo: 'TRX-005', sup: 'SUP-97', ppn: 82500, pph: 0, amt: 750000 },
+            { ref: '640555', tNo: 'TRX-006', sup: 'SUP-96', ppn: 330000, pph: 0, amt: 3000000 },
+            { ref: '650999', tNo: 'TRX-007', sup: 'SUP-96', ppn: 165000, pph: 0, amt: 1500000 },
+            { ref: '660111', tNo: 'TRX-008', sup: 'SUP-95', ppn: 44000, pph: 0, amt: 400000 },
+            { ref: '670222', tNo: 'TRX-009', sup: 'SUP-95', ppn: 275000, pph: 0, amt: 2500000 },
+            { ref: '680333', tNo: 'TRX-010', sup: 'SUP-94', ppn: 236500, pph: 0, amt: 2150000 }
+        ];
+
+        dummyData.forEach((item, i) => {
+            const row = document.createElement('tr');
+            const totalRow = item.amt + item.ppn - item.pph;
+            row.innerHTML = `
+                <td><input type="checkbox" class="transaction-checkbox" checked></td>
+                <td>${i + 1}</td>
+                <td><span style="color: red; font-weight: bold; cursor: pointer;">View</span></td>
+                <td>${item.ref}</td>
+                <td>22-Nov-2025</td>
+                <td>${item.tNo}</td>
+                <td>22-Nov-2025</td>
+                <td>${item.sup}</td>
+                <td class="value-cell">${formatCurrency(item.ppn)}</td>
+                <td class="value-cell">${formatCurrency(item.pph)}</td>
+                <td class="value-cell font-bold">${formatCurrency(item.amt)}</td>
+                <td class="value-cell">${formatCurrency(totalRow)}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        // Navigation
         const entryDocDataBtn = document.getElementById('entryDocumentDataBtn'); 
         if (entryDocDataBtn) {
-             entryDocDataBtn.addEventListener('click', () => {
-                // *** FIX: Navigates to the file named 'invoice_entry.html' ***
+            entryDocDataBtn.addEventListener('click', () => {
                 window.location.href = 'tax_invoice_entry.html'; 
             });
         }
-    });
 
-    // Re-used Checkbox logic (simplified for this mock-up)
-    document.addEventListener('DOMContentLoaded', () => {
+        // Checkbox logic
         const selectAll = document.getElementById('selectAllCheckbox');
         const detailCheckboxes = document.querySelectorAll('.transaction-checkbox'); 
 
-        const updateSelectAll = () => {
-            const checkedCount = Array.from(detailCheckboxes).filter(cb => cb.checked).length;
-            const allChecked = checkedCount === detailCheckboxes.length && detailCheckboxes.length > 0;
-            selectAll.checked = allChecked;
-            selectAll.indeterminate = checkedCount > 0 && checkedCount < detailCheckboxes.length;
-        };
-
         selectAll.addEventListener('change', (e) => {
-            detailCheckboxes.forEach(checkbox => {
-                checkbox.checked = e.target.checked;
-            });
-            updateSelectAll();
+            detailCheckboxes.forEach(checkbox => checkbox.checked = e.target.checked);
         });
-
-        detailCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', updateSelectAll);
-        });
-
-        updateSelectAll();
     });
 </script>
 </body>
