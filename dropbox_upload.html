@@ -273,7 +273,7 @@
 
     if (!simulatedLogin || otpPassed !== 'true') {
         // Not authenticated, redirect to login
-        window.location.href = 'login.html';
+        // window.location.href = 'login.html'; // Disabled for demo
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -290,17 +290,24 @@
         const modalOkButton = document.getElementById('modalOkButton');
         const modalCancelButton = document.getElementById('modalCancelButton');
 
-        // --- Mock Data ---
-        // Mock data representing invoices in the generated dropbox
+        // --- Mock Data (Updated to 6 Items) ---
         const mockDropboxData = [
-            { id: 1, verifNo: '12', receiptNo: 'R-1022', receiptDate: '26-OCT-2025', currency: 'IDR', amount: 3200000.00, totalPayment: 3520000.00, bastDate: '27-OCT-2025', bastQty: 10, taxInvNo: '', supplierName: 'Part 1', npwp: '99.999.999.9-999.999', address: 'Jakarata P' },
-            { id: 2, verifNo: '13', receiptNo: 'R-1023', receiptDate: '27-OCT-2025', currency: 'IDR', amount: 450000.00, totalPayment: 495000.00, bastDate: '27-OCT-2025', bastQty: 10, taxInvNo: '', supplierName: 'Part 2', npwp: '99.999.999.9-999.999', address: 'Bandung D' },
-            { id: 3, verifNo: '14', receiptNo: 'R-1024', receiptDate: '28-OCT-2025', currency: 'IDR', amount: 1500000.00, totalPayment: 1650000.00, bastDate: '29-OCT-2025', bastQty: 20, taxInvNo: '', supplierName: 'Part 1', npwp: '99.999.999.9-999.999', address: 'Jakarata P' },
+            { id: 1, verifNo: 'V-100', receiptNo: 'R-5000', receiptDate: '26-OCT-2025', currency: 'IDR', amount: 3200000.00, totalPayment: 3520000.00, bastDate: '27-OCT-2025', bastQty: 10, taxInvNo: '', supplierName: 'Supplier A', npwp: '99.999.999.9-999.999', address: 'Jakarta P', status: '' },
+            { id: 2, verifNo: 'V-101', receiptNo: 'R-5001', receiptDate: '27-OCT-2025', currency: 'IDR', amount: 450000.00, totalPayment: 495000.00, bastDate: '27-OCT-2025', bastQty: 10, taxInvNo: '', supplierName: 'Supplier B', npwp: '99.999.999.9-999.999', address: 'Bandung D', status: '' },
+            { id: 3, verifNo: 'V-102', receiptNo: 'R-5002', receiptDate: '28-OCT-2025', currency: 'IDR', amount: 1500000.00, totalPayment: 1650000.00, bastDate: '29-OCT-2025', bastQty: 20, taxInvNo: '', supplierName: 'Supplier C', npwp: '99.999.999.9-999.999', address: 'Surabaya S', status: '' },
+            { id: 4, verifNo: 'V-103', receiptNo: 'R-5003', receiptDate: '29-OCT-2025', currency: 'IDR', amount: 2000000.00, totalPayment: 2200000.00, bastDate: '30-OCT-2025', bastQty: 15, taxInvNo: '', supplierName: 'Supplier D', npwp: '99.999.999.9-999.999', address: 'Medan M', status: '' },
+            { id: 5, verifNo: 'V-104', receiptNo: 'R-5004', receiptDate: '30-OCT-2025', currency: 'IDR', amount: 1200000.00, totalPayment: 1320000.00, bastDate: '31-OCT-2025', bastQty: 8, taxInvNo: '', supplierName: 'Supplier E', npwp: '99.999.999.9-999.999', address: 'Bali B', status: '' },
+            { id: 6, verifNo: 'V-105', receiptNo: 'R-5005', receiptDate: '31-OCT-2025', currency: 'IDR', amount: 3500000.00, totalPayment: 3850000.00, bastDate: '01-NOV-2025', bastQty: 25, taxInvNo: '', supplierName: 'Supplier F', npwp: '99.999.999.9-999.999', address: 'Semarang S', status: '' },
         ];
+
+        // Check if PDF was uploaded successfully
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('uploaded') === 'true') {
+            mockDropboxData[0].status = 'Ok pdf'; // Set status for first item
+        }
 
         // --- Utility Functions ---
 
-        /** Updates the current date and time in the top bar */
         function updateDateTime() {
             const now = new Date();
             const formattedDate = now.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase().replace(/,/g, '');
@@ -308,65 +315,48 @@
             document.getElementById('currentDateTime').textContent = `${formattedDate} ${formattedTime}`;
         }
         setInterval(updateDateTime, 1000);
-        updateDateTime(); // Initial call
+        updateDateTime(); 
 
-        /** Hides the modal and resets buttons to generic state */
         function hideModal() {
             customModal.classList.add('hidden');
             customModal.classList.remove('flex');
-            // Reset button text and classes to default if needed
             modalOkButton.textContent = 'OK';
             modalOkButton.className = 'bg-pasti-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-150';
             modalCancelButton.textContent = 'Cancel';
             modalCancelButton.className = 'bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg transition duration-150';
-            modalCancelButton.style.display = 'inline-block'; // Ensure cancel button is visible by default
+            modalCancelButton.style.display = 'inline-block'; 
             modalOkButton.onclick = hideModal; 
             modalCancelButton.onclick = hideModal;
-            modalTitle.textContent = 'Notification'; // Reset title
+            modalTitle.textContent = 'Notification'; 
             modalTitle.className = 'text-xl font-bold mb-4 text-pasti-dark-blue';
         }
 
-        // Set default cancel behavior
-        modalCancelButton.onclick = hideModal;
-        modalOkButton.onclick = hideModal;
-
-        /** Shows a confirmation modal with custom buttons and actions (used for submission) */
         function showConfirmModal(title, messageHtml, onSaveAction, onCancelAction) {
             modalTitle.textContent = title;
             modalMessage.innerHTML = messageHtml;
-            
-            // Adjust buttons to match the image: Cancel (Red), Save (Blue)
             modalCancelButton.textContent = 'Cancel';
             modalCancelButton.className = 'bg-cancel-red hover:bg-[#C9302C] text-white font-bold py-2 px-4 rounded-lg transition duration-150';
             modalCancelButton.onclick = onCancelAction || hideModal;
-
             modalOkButton.textContent = 'Save';
             modalOkButton.className = 'bg-search-button-blue hover:bg-pasti-blue text-white font-bold py-2 px-4 rounded-lg transition duration-150';
             modalOkButton.onclick = onSaveAction; 
-            
-            modalCancelButton.style.display = 'inline-block'; // Ensure cancel button is visible
-
+            modalCancelButton.style.display = 'inline-block';
             customModal.classList.remove('hidden');
             customModal.classList.add('flex');
         }
 
-        /** Shows a simple modal message instead of alert() */
         function showModal(title, message, isError = false) {
             modalTitle.textContent = title;
             modalMessage.textContent = message;
             modalTitle.className = `text-xl font-bold mb-4 ${isError ? 'text-primary-red' : 'text-pasti-dark-blue'}`;
-            // Ensure generic button appearance
             modalOkButton.textContent = 'OK';
             modalOkButton.className = 'bg-pasti-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-150';
-            modalCancelButton.style.display = 'none'; // Hide cancel button for simple notification
+            modalCancelButton.style.display = 'none'; 
             modalOkButton.onclick = hideModal;
-            
             customModal.classList.remove('hidden');
             customModal.classList.add('flex');
         }
 
-
-        /** Formats a number as currency style */
         function formatCurrency(number) {
             return new Intl.NumberFormat('en-US', {
                 minimumFractionDigits: 2,
@@ -374,23 +364,18 @@
             }).format(number);
         }
 
-        /** Renders the invoice table with data */
         function renderTable(data) {
             invoiceTableBody.innerHTML = '';
-
             if (data.length === 0) {
-                invoiceTableBody.innerHTML = '<tr><td colspan="15" class="text-center py-6 text-gray-500">No invoices in dropbox.</td></tr>';
+                invoiceTableBody.innerHTML = '<tr><td colspan="16" class="text-center py-6 text-gray-500">No invoices in dropbox.</td></tr>';
                 selectAllCheckbox.checked = false;
                 selectAllCheckbox.disabled = true;
                 return;
             }
-
             selectAllCheckbox.disabled = false;
-
             data.forEach((invoice, index) => {
                 const row = document.createElement('tr');
                 row.className = 'border-b border-gray-200 hover:bg-gray-100';
-
                 row.innerHTML = `
                     <td class="py-3 px-3 text-center">${index + 1}</td>
                     <td class="py-3 px-3 text-center"><input type="checkbox" data-id="${invoice.id}" class="invoice-checkbox"></td>
@@ -417,23 +402,16 @@
             });
         }
 
-        // Expose function for inline button click
         window.viewDetail = function(id) {
             showModal('Invoice Detail', `Viewing details for Invoice ID: ${id}.`, false);
         };
 
         window.uploadTaxInvoice = function(id) {
-            // Find the invoice data to get the file name
             const invoice = mockDropboxData.find(inv => inv.id === id);
             const fileName = invoice ? `invoice_${invoice.verifNo}.pdf` : 'invoice_document.pdf';
-
-            // Navigate to upload document page with parameters
             window.location.href = `upload_document.html?invoiceId=${id}&fileName=${encodeURIComponent(fileName)}`;
         };
 
-        // --- Event Handlers ---
-
-        // Select All Checkbox logic
         selectAllCheckbox.addEventListener('change', (e) => {
             const isChecked = e.target.checked;
             document.querySelectorAll('.invoice-checkbox').forEach(checkbox => {
@@ -441,62 +419,30 @@
             });
         });
 
-        // Generate Dropbox logic (placeholder)
         generateDropboxBtn.addEventListener('click', () => {
             showModal('Generate Dropbox', 'Dropbox already generated. This is the upload page.', false);
         });
         
-        // ** SUBMIT DROPBOX LOGIC (UPDATED REDIRECTION) **
         submitDropboxBtn.addEventListener('click', () => {
-            // 1. Check if at least one checkbox is selected
             const selectedCheckboxes = document.querySelectorAll('.invoice-checkbox:checked');
-            
             if (selectedCheckboxes.length === 0) {
                 showModal('Validation Error', 'Please select at least one receipt to submit.', true);
                 return;
             }
-
-            // 2. Define the action to take when the user clicks 'Save' (Submit)
             const handleSave = () => {
-                // Simulate submission logic
-                console.log(`Submitting ${selectedCheckboxes.length} receipts...`);
-                
                 hideModal();
-                
-                // After successful submission, redirect to the Print Dropbox page
-                // We'll skip the alert() here for a cleaner transition as requested.
                 window.location.href = 'print_dropbox.html'; 
             };
-            
-            // 3. Define the action to take when the user clicks 'Cancel'
             const handleCancel = () => {
                 hideModal();
             };
-
-            // 4. Show the confirmation modal matching the image
             const modalHtml = `
                 <div class="text-2xl font-bold text-warning-orange mb-3">Warning</div>
                 <p class="text-gray-700">Are you sure to submit transaction? After submission, you will be redirected to the Print Dropbox page.</p>
             `;
-            
-            showConfirmModal(
-                '', 
-                modalHtml,
-                handleSave,
-                handleCancel
-            );
+            showConfirmModal('', modalHtml, handleSave, handleCancel);
         });
-        // ** END SUBMIT DROPBOX LOGIC **
 
-        // Check for stored FP submission status
-        const fpStatus = localStorage.getItem('fpSubmissionStatus');
-        if (fpStatus) {
-            // Update the first invoice's status as an example
-            mockDropboxData[0].status = fpStatus;
-            localStorage.removeItem('fpSubmissionStatus'); // Clear after use
-        }
-
-        // Initial render
         renderTable(mockDropboxData);
     });
 </script>
